@@ -104,6 +104,11 @@ const mapPromise: Promise<OlMap> = new Promise((resolve, reject) => {
   throw err;
 }) as Promise<OlMap>;
 
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
+
 const MappifiedMain = (mappify)(Main);
 
 render(

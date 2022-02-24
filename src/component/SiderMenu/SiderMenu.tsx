@@ -15,6 +15,7 @@ const SubMenu = Menu.SubMenu;
 // default props
 interface DefaultSiderProps {
   collapsible?: boolean;
+  cachingToolEnabled?: boolean;
 }
 
 interface SiderProps extends Partial<DefaultSiderProps> {
@@ -27,6 +28,7 @@ interface SiderProps extends Partial<DefaultSiderProps> {
 
 interface SiderState {
   collapsed: boolean;
+  doCaching: boolean;
 }
 
 /**
@@ -41,7 +43,8 @@ export class SiderMenu extends React.Component<SiderProps, SiderState> {
   * The default properties.
   */
   public static defaultProps: DefaultSiderProps = {
-    collapsible: true
+    collapsible: true,
+    cachingToolEnabled: false
   };
 
   /**
@@ -52,8 +55,14 @@ export class SiderMenu extends React.Component<SiderProps, SiderState> {
     super(props);
 
     this.state = {
-      collapsed: false
+      collapsed: false,
+      doCaching: false
     };
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'STOP_CACHING'
+      });
+    }
   }
 
   onCollapse = (collapsed: boolean) => {
@@ -73,8 +82,10 @@ export class SiderMenu extends React.Component<SiderProps, SiderState> {
       collapsible,
       t,
       measureToolsEnabled,
-      map
+      map,
+      cachingToolEnabled
     } = this.props;
+
     return (
       <Sider
         width="300"
@@ -178,10 +189,19 @@ export class SiderMenu extends React.Component<SiderProps, SiderState> {
             </span>
             }
           >
-            <Menu.Item key="6">{t('Imprint.contact')}</Menu.Item>
+            <Menu.Item key="7">{t('Imprint.contact')}</Menu.Item>
             <Menu.Item key="8">{t('Imprint.privacypolicy')}</Menu.Item>
           </SubMenu>
-          <Menu.Item key="9">
+          {cachingToolEnabled && <Menu.Item key="9" onClick={() => {
+            const message = this.state.doCaching ? 'STOP' : 'START';
+            navigator.serviceWorker.controller.postMessage({
+              type: `${message}_CACHING`
+            });
+            this.setState({doCaching: !this.state.doCaching});
+          }}>
+            {t(this.state.doCaching ? 'SiderMenu.disableCaching' : 'SiderMenu.enableCaching')}
+          </Menu.Item>}
+          <Menu.Item key="10">
             <UserOutlined />
             <span>{t('Logout')}</span>
           </Menu.Item>
