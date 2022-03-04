@@ -168,7 +168,7 @@
     "setTimeLineToLayerInterval": "Apply time interval of the layer"
   },
   "SiderMenu": {
-    "doCaching": "Enable caching",
+    "enableCaching": "Enable caching",
     "disableCaching": "Disable caching"
   }
 }

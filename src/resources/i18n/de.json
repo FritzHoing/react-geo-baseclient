@@ -169,7 +169,7 @@
     "setTimeLineToLayerInterval": "Zeitraum des Layers anwenden"
   },
   "SiderMenu": {
-    "doCaching": "Caching aktivieren",
+    "enableCaching": "Caching aktivieren",
     "disableCaching": "Caching deaktivieren"
   }
 }
